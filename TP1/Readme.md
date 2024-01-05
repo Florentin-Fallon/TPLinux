@@ -359,3 +359,61 @@ ENTRYPOINT ["python3", "/app.py"]
 
 
 # 🌞 Lancer l'image
+
+# III. Docker compose
+# 🌞 Créez un fichier docker-compose.yml
+
+Voici le résultat :
+
+```shell
+[florentinfallon@TPLinux-TP1 python_app_build]$ sudo mkdir /home/florentinfallon/compose_test
+[florentinfallon@TPLinux-TP1 python_app_build]$ cd /home/florentinfallon/compose_test
+[florentinfallon@TPLinux-TP1 compose_test]$ sudo nano docker-compose.yml
+[florentinfallon@TPLinux-TP1 compose_test]$ ls
+docker-compose.yml
+```
+
+# 🌞 Lancez les deux conteneurs avec docker compose
+
+Voici le lancement des deux conteneurs :
+
+```shell
+[florentinfallon@TPLinux-TP1 compose_test]$ docker compose up -d
+[+] Running 3/3
+ ✔ conteneur_flopesque Pulled                                                                                                          5.2s 
+ ✔ conteneur_nul 1 layers [⣿]      0B/0B      Pulled                                                                                   4.7s 
+   ✔ b66b4ecd3ecf Already exists                                                                                                       0.0s 
+[+] Running 3/3
+ ✔ Network compose_test_default                  Created                                                                               0.2s 
+ ✔ Container compose_test-conteneur_flopesque-1  Started                                                                               0.0s 
+ ✔ Container compose_test-conteneur_nul-1        Started                                                                               0.0s 
+```
+
+# 🌞 Vérifier que les deux conteneurs tournent
+
+Voici le résultat que les deux conteneurs tournent correctement :
+
+```shell
+[florentinfallon@TPLinux-TP1 compose_test]$ docker ps
+CONTAINER ID   IMAGE     COMMAND        CREATED         STATUS         PORTS     NAMES
+7e07e0a73eea   debian    "sleep 9999"   2 minutes ago   Up 2 minutes             compose_test-conteneur_nul-1
+f6a557a34ddd   debian    "sleep 9999"   2 minutes ago   Up 2 minutes             compose_test-conteneur_flopesque-1
+
+```
+
+# 🌞 Pop un shell dans le conteneur conteneur_nul
+
+J'ai rencontrer ce problème et j'ai beau faire plein de chose rien ne change :
+
+```shell
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Last login: Fri Jan  5 18:49:55 2024 from 192.168.29.1
+[florentinfallon@TPLinux-TP1 ~]$ docker ps
+CONTAINER ID   IMAGE     COMMAND        CREATED          STATUS         PORTS     NAMES
+7e07e0a73eea   debian    "sleep 9999"   22 minutes ago   Up 9 minutes             compose_test-conteneur_nul-1
+f6a557a34ddd   debian    "sleep 9999"   22 minutes ago   Up 9 minutes             compose_test-conteneur_flopesque-1
+[florentinfallon@TPLinux-TP1 ~]$ docker exec -it compose_test-conteneur_nul-1 sh
+# ping compose_test-conteneur_flopesque-1
+sh: 1: ping: not found
+```
